@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<title>Employment Hub | BJP Jan Seva</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    body {
+        background: linear-gradient(135deg, #1a2639 0%, #2c3e50 50%, #1e2a38 100%);
+        min-height: 100vh;
+        padding: 20px;
+        position: relative;
+    }
+
+    body::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background: linear-gradient(90deg, #FF9933 0%, #FF9933 33%, #FFFFFF 33%, #FFFFFF 66%, #138808 66%, #138808 100%);
+        opacity: 0.7;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: auto;
+        background: rgba(15, 25, 35, 0.88);
+        backdrop-filter: blur(14px);
+        border: 1px solid rgba(255, 228, 132, 0.35);
+        border-radius: 30px;
+        padding: 40px;
+    }
+
+    h1 {
+        text-align: center;
+        color: #FFE484;
+        font-size: 42px;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 15px;
+    }
+
+    .subtitle {
+        text-align: center;
+        color: rgba(255, 245, 220, 0.8);
+        margin-bottom: 40px;
+        font-size: 16px;
+    }
+
+    .hub-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 25px;
+        margin-top: 20px;
+    }
+
+    .hub-card {
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 228, 132, 0.2);
+        border-radius: 24px;
+        padding: 35px 25px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: block;
+    }
+
+    .hub-card:hover {
+        transform: translateY(-8px);
+        background: rgba(255, 255, 255, 0.15);
+        border-color: #FFE484;
+    }
+
+    .hub-card i {
+        font-size: 55px;
+        color: #FFE484;
+        margin-bottom: 20px;
+    }
+
+    .hub-card h3 {
+        color: #fff;
+        font-size: 22px;
+        margin-bottom: 10px;
+    }
+
+    .hub-card p {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 14px;
+    }
+
+    .footer {
+        text-align: center;
+        margin-top: 40px;
+        padding-top: 20px;
+        border-top: 1px solid rgba(255, 228, 132, 0.2);
+        color: #FFE9C4;
+        font-size: 13px;
+    }
+
+    @media (max-width: 768px) {
+        .container { padding: 25px; }
+        h1 { font-size: 28px; }
+        .hub-grid { grid-template-columns: 1fr; }
+    }
+</style>
+</head>
+<body>
+<div class="container">
+
+
+    <div class="hub-grid">
+        <a href="/post_job_page" class="hub-card">
+            <i class="fa-solid fa-plus-circle"></i>
+            <h3>Hire trusted workers instantly</h3>
+            <p>Employers can post job opportunities</p>
+        </a>
+
+        <a href="/search_jobs_page" class="hub-card">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <h3>Discover jobs near you</h3>
+            <p>Find available jobs near you</p>
+        </a>
+
+        <a href="/join_worker_page" class="hub-card">
+            <i class="fa-solid fa-user-plus"></i>
+            <h3>Join as a Worker</h3>
+            <p>Register as a service provider</p>
+        </a>
+
+        <a href="/search_worker_page" class="hub-card">
+            <i class="fa-solid fa-users"></i>
+            <h3>Search a Worker</h3>
+            <p>Find workers by skill & location</p>
+        </a>
+    </div>
+
+
+</div>
+</body>
+</html>

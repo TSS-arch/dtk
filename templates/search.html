@@ -1,0 +1,1143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Employment Hub | BJP Jan Seva</title>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: linear-gradient(135deg, #1a2639 0%, #2c3e50 50%, #1e2a38 100%);
+    padding: 20px;
+    min-height: 100vh;
+    position: relative;
+}
+
+/* Tricolor top bar */
+body::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, #FF9933 0%, #FF9933 33%, #FFFFFF 33%, #FFFFFF 66%, #138808 66%, #138808 100%);
+    opacity: 0.7;
+    z-index: 1;
+}
+
+/* Main Wrapper */
+.main-wrapper {
+    max-width: 1400px;
+    margin: auto;
+    background: rgba(15, 25, 35, 0.82);
+    backdrop-filter: blur(14px);
+    border: 1px solid rgba(255, 228, 132, 0.35);
+    border-radius: 30px;
+    padding: 30px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+}
+
+/* Header */
+.header {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.header h2 {
+    font-size: 36px;
+    font-weight: 800;
+    margin-bottom: 8px;
+    color: #FFE484;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+.header h2 i {
+    color: #FFE484;
+    font-size: 36px;
+}
+
+.header p {
+    color: rgba(255, 245, 220, 0.85);
+    font-size: 15px;
+    background: rgba(255, 228, 132, 0.12);
+    display: inline-block;
+    padding: 6px 20px;
+    border-radius: 40px;
+}
+
+/* Tabs Navigation */
+.tabs-nav {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 30px;
+    background: rgba(0, 0, 0, 0.35);
+    padding: 8px;
+    border-radius: 60px;
+    flex-wrap: wrap;
+    border: 1px solid rgba(255, 228, 132, 0.2);
+}
+
+.tab-btn {
+    flex: 1;
+    padding: 14px 18px;
+    border: none;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.tab-btn i {
+    font-size: 18px;
+}
+
+.tab-btn.active {
+    background: linear-gradient(135deg, #FFB347, #FF8C00);
+    color: #fff;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    border-bottom: 2px solid #FFE484;
+}
+
+.tab-btn:hover:not(.active) {
+    background: rgba(255, 228, 132, 0.15);
+    color: #FFE484;
+}
+
+/* Tab Content */
+.tab-content {
+    display: none;
+    animation: fadeIn 0.4s ease;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Form Styling */
+.form-card {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 24px;
+    padding: 25px;
+    border: 1px solid rgba(255, 228, 132, 0.2);
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.full-width {
+    grid-column: span 2;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #FFE9C4;
+}
+
+label i {
+    margin-right: 6px;
+    color: #FFE484;
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: 14px 16px;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 228, 132, 0.2);
+    background: rgba(0, 0, 0, 0.45);
+    color: #fff;
+    font-size: 14px;
+    outline: none;
+    transition: 0.3s;
+    font-family: inherit;
+}
+
+input:focus, select:focus, textarea:focus {
+    border-color: #FFE484;
+    background: rgba(0, 0, 0, 0.6);
+    box-shadow: 0 0 10px rgba(255, 228, 132, 0.2);
+}
+
+input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+/* File Upload Area */
+.file-upload-area {
+    background: rgba(0, 0, 0, 0.3);
+    border: 2px dashed rgba(255, 228, 132, 0.4);
+    border-radius: 20px;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.file-upload-area:hover {
+    border-color: #FFE484;
+    background: rgba(255, 228, 132, 0.05);
+}
+
+.file-upload-area i {
+    font-size: 32px;
+    color: #FFE484;
+    margin-bottom: 10px;
+}
+
+#preview {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    margin-top: 15px;
+    border-radius: 16px;
+    border: 2px solid #FFE484;
+    display: none;
+}
+
+/* Map Styling */
+#map {
+    height: 380px;
+    border-radius: 20px;
+    margin-top: 10px;
+    margin-bottom: 15px;
+    border: 2px solid rgba(255, 228, 132, 0.3);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+}
+
+.radius-control {
+    background: rgba(0, 0, 0, 0.35);
+    padding: 15px;
+    border-radius: 18px;
+    margin: 15px 0;
+}
+
+.radius-control label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+#radiusVal {
+    background: linear-gradient(135deg, #FFB347, #FF8C00);
+    padding: 5px 12px;
+    border-radius: 30px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+input[type="range"] {
+    width: 100%;
+    padding: 0;
+    height: 6px;
+    border-radius: 10px;
+    background: rgba(255, 228, 132, 0.3);
+    -webkit-appearance: none;
+}
+
+input[type="range"]:focus {
+    outline: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #FFE484;
+    cursor: pointer;
+    box-shadow: 0 0 5px #FFE484;
+}
+
+/* Tags */
+.tag {
+    background: linear-gradient(135deg, #FFB347, #FF8C00);
+    color: #fff;
+    padding: 6px 14px;
+    margin: 4px;
+    border-radius: 30px;
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 600;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+#selectedAreas {
+    margin-top: 15px;
+    min-height: 50px;
+    background: rgba(0, 0, 0, 0.25);
+    border-radius: 16px;
+    padding: 12px;
+}
+
+/* Submit Button */
+.submit-btn {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #FFB347, #FF8C00);
+    color: #fff;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-top: 20px;
+    border-bottom: 2px solid #FFE484;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.submit-btn:hover {
+    transform: translateY(-2px);
+    background: linear-gradient(135deg, #FFC266, #FF9F2E);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+/* Filters Section */
+.filters-section {
+    background: rgba(0, 0, 0, 0.35);
+    padding: 18px;
+    border-radius: 22px;
+    margin-bottom: 25px;
+    border: 1px solid rgba(255, 228, 132, 0.2);
+}
+
+.filters-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 15px;
+}
+
+/* Results Grid */
+.results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 24px;
+}
+
+/* Job Card */
+.job-card {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 228, 132, 0.2);
+    border-radius: 24px;
+    overflow: hidden;
+    transition: 0.3s ease;
+}
+
+.job-card:hover {
+    transform: translateY(-5px);
+    background: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+}
+
+.job-header {
+    padding: 20px 20px 10px 20px;
+    border-bottom: 1px solid rgba(255, 228, 132, 0.2);
+}
+
+.job-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #FFE484;
+    margin-bottom: 8px;
+}
+
+.job-company {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.job-company i {
+    margin-right: 5px;
+    color: #FFE484;
+}
+
+.job-body {
+    padding: 15px 20px;
+}
+
+.job-detail {
+    margin-bottom: 12px;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.job-detail i {
+    width: 24px;
+    color: #FFE484;
+    margin-right: 8px;
+}
+
+.job-description {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255, 228, 132, 0.15);
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.5;
+}
+
+.job-footer {
+    padding: 15px 20px 20px 20px;
+    border-top: 1px solid rgba(255, 228, 132, 0.15);
+}
+
+.apply-btn {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #2c3e50, #1e2a38);
+    color: #FFE484;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+    border: 1px solid rgba(255, 228, 132, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.apply-btn:hover {
+    background: linear-gradient(135deg, #3e5a6f, #2c3e50);
+    transform: translateY(-2px);
+}
+
+/* Worker Card */
+.service-card {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 228, 132, 0.2);
+    border-radius: 24px;
+    overflow: hidden;
+    transition: 0.3s ease;
+}
+
+.service-card:hover {
+    transform: translateY(-5px);
+    background: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+}
+
+.card-img {
+    position: relative;
+}
+
+.card-img img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    background: #2c3e50;
+}
+
+.occupation-badge {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background: linear-gradient(135deg, #FFB347, #FF8C00);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    color: #fff;
+}
+
+.card-content {
+    padding: 20px;
+}
+
+.service-name {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: #FFE484;
+}
+
+.info-row {
+    margin-bottom: 12px;
+}
+
+.info-label {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.6);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    letter-spacing: 0.5px;
+}
+
+.info-label i {
+    margin-right: 5px;
+    color: #FFE484;
+}
+
+.info-value {
+    font-size: 14px;
+    color: #fff;
+    line-height: 1.5;
+}
+
+.location-box {
+    background: rgba(0, 0, 0, 0.3);
+    border-left: 3px solid #FFE484;
+    border-radius: 14px;
+    padding: 12px;
+    margin-top: 12px;
+    font-size: 13px;
+}
+
+.call-btn {
+    width: 100%;
+    margin-top: 18px;
+    padding: 12px;
+    border: none;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #2c3e50, #1e2a38);
+    color: #FFE484;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+    border: 1px solid rgba(255, 228, 132, 0.3);
+}
+
+.call-btn:hover {
+    background: linear-gradient(135deg, #3e5a6f, #2c3e50);
+    transform: translateY(-2px);
+}
+
+.empty-message {
+    text-align: center;
+    padding: 60px;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 16px;
+    grid-column: 1 / -1;
+}
+
+/* Success Message */
+.success-msg {
+    background: rgba(46, 204, 113, 0.2);
+    border: 1px solid #2ecc71;
+    color: #2ecc71;
+    padding: 12px;
+    border-radius: 12px;
+    margin-top: 15px;
+    text-align: center;
+    display: none;
+}
+
+.error-msg {
+    background: rgba(231, 76, 60, 0.2);
+    border: 1px solid #e74c3c;
+    color: #e74c3c;
+    padding: 12px;
+    border-radius: 12px;
+    margin-top: 15px;
+    text-align: center;
+    display: none;
+}
+
+/* Footer */
+.footer-text {
+    text-align: center;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 228, 132, 0.2);
+    color: #FFE9C4;
+    font-size: 13px;
+}
+
+.footer-text i {
+    margin: 0 5px;
+    color: #FFE484;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    body {
+        padding: 12px;
+    }
+    .main-wrapper {
+        padding: 18px;
+    }
+    .header h2 {
+        font-size: 28px;
+    }
+    .tabs-nav {
+        flex-direction: column;
+        border-radius: 20px;
+    }
+    .tab-btn {
+        justify-content: center;
+    }
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+    .full-width {
+        grid-column: span 1;
+    }
+    .filters-grid {
+        grid-template-columns: 1fr;
+    }
+    .results-grid {
+        grid-template-columns: 1fr;
+    }
+    #map {
+        height: 280px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="main-wrapper">
+
+    <div class="header">
+        <h2>
+            <i class="fa-solid fa-briefcase"></i> 
+            Employment Rozgar Setu
+            <i class="fa-solid fa-hand-holding-heart"></i>
+        </h2>
+        <p>सबका साथ, सबका विकास | Connecting Employers & Workers</p>
+    </div>
+
+    <!-- Tabs Navigation -->
+    <div class="tabs-nav">
+        <button class="tab-btn" data-tab="post-job">
+            <i class="fa-solid fa-plus-circle"></i> Post a Job
+        </button>
+        <button class="tab-btn" data-tab="search-jobs">
+            <i class="fa-solid fa-magnifying-glass"></i> Search Job Posts
+        </button>
+        <button class="tab-btn" data-tab="join-worker">
+            <i class="fa-solid fa-user-plus"></i> Join as a Worker
+        </button>
+        <button class="tab-btn" data-tab="search-worker">
+            <i class="fa-solid fa-users"></i> Search a Worker
+        </button>
+    </div>
+
+    <!-- TAB 1: Post a Job -->
+    <div id="post-job" class="tab-content">
+        <div class="form-card">
+            <h3 style="color: #FFE484; margin-bottom: 20px;">
+                <i class="fa-solid fa-bullhorn"></i> Post a New Job Opportunity
+            </h3>
+            
+            <form id="postJobForm" method="POST" action="/post_job">
+                <div class="form-grid">
+                    <div class="full-width input-group">
+                        <label><i class="fa-solid fa-briefcase"></i> Job Title *</label>
+                        <input type="text" name="job_title" id="job_title" placeholder="e.g., Plumber Needed, Electrician Required" required>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label><i class="fa-solid fa-building"></i> Company/Employer Name *</label>
+                        <input type="text" name="company_name" id="company_name" placeholder="Your name or organization" required>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label><i class="fa-solid fa-phone"></i> Contact Number *</label>
+                        <input type="tel" name="contact_number" id="contact_number" placeholder="Phone number" required>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label><i class="fa-solid fa-map-marker-alt"></i> Job Location *</label>
+                        <input type="text" name="job_location" id="job_location" placeholder="Area, City" required>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label><i class="fa-solid fa-coins"></i> Salary / Pay</label>
+                        <input type="text" name="salary" id="salary" placeholder="e.g., ₹500/day or negotiable">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label><i class="fa-regular fa-calendar"></i> Job Type</label>
+                        <select name="job_type" id="job_type">
+                            <option value="Full-time">Full-time</option>
+                            <option value="Part-time">Part-time</option>
+                            <option value="Contract">Contract</option>
+                            <option value="Daily Wage">Daily Wage</option>
+                        </select>
+                    </div>
+                    
+                    <div class="full-width input-group">
+                        <label><i class="fa-solid fa-align-left"></i> Job Description</label>
+                        <textarea name="job_description" id="job_description" rows="4" placeholder="Describe the job, requirements, timings, skills needed..."></textarea>
+                    </div>
+                </div>
+                
+                <button type="submit" class="submit-btn">
+                    <i class="fa-solid fa-paper-plane"></i> Post Job
+                </button>
+                
+                <div id="postJobMsg" class="success-msg"></div>
+            </form>
+        </div>
+    </div>
+
+    <!-- TAB 2: Search Job Posts -->
+    <div id="search-jobs" class="tab-content">
+        <div class="filters-section">
+            <div class="filters-grid">
+                <input type="text" id="jobSearchInput" placeholder="Search by job title, company, location...">
+                <select id="jobTypeFilter">
+                    <option value="">All Job Types</option>
+                    <option value="Full-time">Full-time</option>
+                    <option value="Part-time">Part-time</option>
+                    <option value="Contract">Contract</option>
+                    <option value="Daily Wage">Daily Wage</option>
+                </select>
+                <input type="text" id="jobLocationFilter" placeholder="Filter by location...">
+            </div>
+        </div>
+        <div id="jobResults" class="results-grid">
+            {% for job in job_posts %}
+            <div class="job-card" 
+                 data-title="{{ job[1]|lower }}" 
+                 data-company="{{ job[2]|lower }}" 
+                 data-location="{{ job[4]|lower }}"
+                 data-type="{{ job[6]|lower }}">
+                <div class="job-header">
+                    <div class="job-title">{{ job[1] }}</div>
+                    <div class="job-company"><i class="fa-solid fa-building"></i> {{ job[2] }}</div>
+                </div>
+                <div class="job-body">
+                    <div class="job-detail"><i class="fa-solid fa-location-dot"></i> {{ job[4] }}</div>
+                    <div class="job-detail"><i class="fa-solid fa-phone"></i> {{ job[3] }}</div>
+                    <div class="job-detail"><i class="fa-solid fa-coins"></i> {{ job[5] or 'Negotiable' }}</div>
+                    <div class="job-detail"><i class="fa-regular fa-clock"></i> {{ job[6] }}</div>
+                    <div class="job-description">{{ job[7] or 'No description provided' }}</div>
+                </div>
+                <div class="job-footer">
+                    <a href="tel:{{ job[3] }}">
+                        <button class="apply-btn">
+                            <i class="fa-solid fa-phone-alt"></i> Contact Employer
+                        </button>
+                    </a>
+                </div>
+            </div>
+            {% else %}
+            <div class="empty-message">No job posts available. Be the first to post a job!</div>
+            {% endfor %}
+        </div>
+        <p id="noJobData" class="empty-message" style="display:none;">No matching jobs found</p>
+    </div>
+
+    <!-- TAB 3: Join as a Worker -->
+    <div id="join-worker" class="tab-content">
+        <div class="form-card">
+            <h3 style="color: #FFE484; margin-bottom: 20px;">
+                <i class="fa-solid fa-user-plus"></i> Create Your Service Profile
+            </h3>
+
+            <form method="POST" action="/service_profile" enctype="multipart/form-data">
+                <div class="form-grid">
+                    <div class="input-group">
+                        <label><i class="fa-solid fa-user"></i> Full Name *</label>
+                        <input type="text" name="name" placeholder="Enter your full name" required>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label><i class="fa-solid fa-phone"></i> Mobile Number *</label>
+                        <input type="tel" name="mobile" placeholder="10-digit mobile number" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label><i class="fa-solid fa-briefcase"></i> Occupation *</label>
+                        <input type="text" name="occupation" placeholder="e.g., Plumber, Electrician" required>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label><i class="fa-solid fa-location-dot"></i> Address</label>
+                        <input type="text" name="address" placeholder="Your full address">
+                    </div>
+
+                    <div class="full-width">
+                        <label><i class="fa-solid fa-camera"></i> Profile Photo</label>
+                        <div class="file-upload-area" onclick="document.getElementById('photo').click()">
+                            <i class="fa-solid fa-cloud-upload-alt"></i>
+                            <p style="font-size: 13px; margin-top: 5px;">Click to upload photo</p>
+                            <input type="file" name="photo" id="photo" style="display:none;" accept="image/*">
+                        </div>
+                        <img id="preview" alt="Preview">
+                    </div>
+
+                    <div class="full-width">
+                        <label><i class="fa-solid fa-map-marked-alt"></i> Select Your Service Coverage</label>
+                        <div id="map"></div>
+                        <div class="radius-control">
+                            <label>
+                                <span><i class="fa-solid fa-circle-radiation"></i> Service Radius</span>
+                                <span id="radiusVal">10</span> KM
+                            </label>
+                            <input type="range" id="radiusSlider" min="1" max="50" value="10" step="1">
+                        </div>
+                        <div id="selectedAreas"></div>
+                    </div>
+
+                    <input type="hidden" name="service_areas" id="serviceAreas">
+                    <input type="hidden" name="center_lat" id="centerLat">
+                    <input type="hidden" name="center_lon" id="centerLon">
+                    <input type="hidden" name="radius_km" id="radiusKm">
+                </div>
+
+                <button type="submit" class="submit-btn">
+                    <i class="fa-solid fa-save"></i> Register as Worker
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- TAB 4: Search a Worker -->
+    <div id="search-worker" class="tab-content">
+        <div class="filters-section">
+            <div class="filters-grid">
+                <input type="text" id="searchInput" placeholder="Search by name, occupation, or area...">
+                <select id="occupationFilter">
+                    <option value="">All Occupations</option>
+                    {% for o in occupations %}
+                    <option value="{{ o }}">{{ o }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <div id="results" class="results-grid">
+            {% for r in results %}
+            <div class="service-card" 
+                 data-name="{{ r[1]|lower }}" 
+                 data-occupation="{{ r[3]|lower }}" 
+                 data-area="{{ r[6]|lower }}">
+                <div class="card-img">
+                    {% if r[5] %}
+                    <img src="/static/uploads/{{ r[5] }}" alt="{{ r[1] }}">
+                    {% else %}
+                    <img src="https://via.placeholder.com/400x250?text=Service+Provider" alt="Profile Image">
+                    {% endif %}
+                    <span class="occupation-badge">
+                        <i class="fa-solid fa-briefcase"></i> {{ r[3] }}
+                    </span>
+                </div>
+                <div class="card-content">
+                    <div class="service-name">{{ r[1] }}</div>
+                    <div class="info-row">
+                        <div class="info-label"><i class="fa-solid fa-phone"></i> Contact</div>
+                        <div class="info-value">{{ r[2] }}</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label"><i class="fa-solid fa-location-dot"></i> Service Areas</div>
+                        <div class="info-value">{{ r[6] }}</div>
+                    </div>
+                    <a href="tel:{{ r[2] }}">
+                        <button class="call-btn"><i class="fa-solid fa-phone-alt"></i> Call Now</button>
+                    </a>
+                </div>
+            </div>
+            {% else %}
+            <div class="empty-message">No workers registered yet</div>
+            {% endfor %}
+        </div>
+        <p id="noData" class="empty-message" style="display:none;">No matching workers found</p>
+    </div>
+
+    <div class="footer-text">
+        <i class="fa-solid fa-flower"></i> रोजगार से सशक्तिकरण | Empowering Youth, Building Bharat <i class="fa-solid fa-flower"></i>
+    </div>
+</div>
+
+<script>
+    // Tab Switching
+    const tabs = document.querySelectorAll('.tab-btn');
+    const contents = document.querySelectorAll('.tab-content');
+
+    tabs.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const tabId = btn.dataset.tab;
+            tabs.forEach(b => b.classList.remove('active'));
+            contents.forEach(c => c.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+        });
+    });
+
+    // ========== JOB POST AJAX SUBMISSION ==========
+    const postJobForm = document.getElementById('postJobForm');
+    if (postJobForm) {
+        postJobForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(postJobForm);
+            
+            try {
+                const response = await fetch('/post_job', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+                
+                const msgDiv = document.getElementById('postJobMsg');
+                if (data.success) {
+                    msgDiv.className = 'success-msg';
+                    msgDiv.innerHTML = '<i class="fa-solid fa-check-circle"></i> ' + data.message;
+                    msgDiv.style.display = 'block';
+                    postJobForm.reset();
+                    setTimeout(() => {
+                        msgDiv.style.display = 'none';
+                        // Refresh job list
+                        location.reload();
+                    }, 2000);
+                } else {
+                    msgDiv.className = 'error-msg';
+                    msgDiv.innerHTML = '<i class="fa-solid fa-exclamation-triangle"></i> ' + data.message;
+                    msgDiv.style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        });
+    }
+
+    // ========== SEARCH JOBS FILTER ==========
+    const jobSearchInput = document.getElementById('jobSearchInput');
+    const jobTypeFilter = document.getElementById('jobTypeFilter');
+    const jobLocationFilter = document.getElementById('jobLocationFilter');
+    const jobCards = document.querySelectorAll('#jobResults .job-card');
+    const noJobData = document.getElementById('noJobData');
+
+    function filterJobCards() {
+        if (!jobCards.length) return;
+        let visible = 0;
+        const searchTerm = jobSearchInput ? jobSearchInput.value.toLowerCase() : '';
+        const typeTerm = jobTypeFilter ? jobTypeFilter.value.toLowerCase() : '';
+        const locationTerm = jobLocationFilter ? jobLocationFilter.value.toLowerCase() : '';
+
+        jobCards.forEach(card => {
+            const title = card.dataset.title || '';
+            const company = card.dataset.company || '';
+            const location = card.dataset.location || '';
+            const type = card.dataset.type || '';
+            
+            let match = true;
+            if (searchTerm && !title.includes(searchTerm) && !company.includes(searchTerm) && !location.includes(searchTerm)) {
+                match = false;
+            }
+            if (typeTerm && type !== typeTerm) {
+                match = false;
+            }
+            if (locationTerm && !location.includes(locationTerm)) {
+                match = false;
+            }
+            
+            card.style.display = match ? 'block' : 'none';
+            if (match) visible++;
+        });
+        
+        if (noJobData) {
+            noJobData.style.display = visible === 0 ? 'block' : 'none';
+        }
+    }
+
+    if (jobSearchInput) jobSearchInput.addEventListener('input', filterJobCards);
+    if (jobTypeFilter) jobTypeFilter.addEventListener('change', filterJobCards);
+    if (jobLocationFilter) jobLocationFilter.addEventListener('input', filterJobCards);
+
+    // ========== SEARCH WORKER FILTER ==========
+    const searchInput = document.getElementById("searchInput");
+    const occupationFilter = document.getElementById("occupationFilter");
+    const workerCards = document.querySelectorAll("#results .service-card");
+    const noData = document.getElementById("noData");
+
+    function filterWorkerCards() {
+        if (!workerCards.length) return;
+        let visible = 0;
+        const searchTerm = searchInput ? searchInput.value.toLowerCase() : "";
+        const occupationTerm = occupationFilter ? occupationFilter.value.toLowerCase() : "";
+
+        workerCards.forEach(card => {
+            const name = card.dataset.name || "";
+            const occupation = card.dataset.occupation || "";
+            const area = card.dataset.area || "";
+            
+            const matchSearch = searchTerm === "" || 
+                               name.includes(searchTerm) || 
+                               occupation.includes(searchTerm) || 
+                               area.includes(searchTerm);
+            const matchOccupation = occupationTerm === "" || occupation === occupationTerm;
+            
+            if (matchSearch && matchOccupation) {
+                card.style.display = "block";
+                visible++;
+            } else {
+                card.style.display = "none";
+            }
+        });
+        
+        if (noData) {
+            noData.style.display = visible === 0 ? "block" : "none";
+        }
+    }
+
+    if (searchInput) searchInput.addEventListener("input", filterWorkerCards);
+    if (occupationFilter) occupationFilter.addEventListener("change", filterWorkerCards);
+
+    // ========== MAP FUNCTIONALITY ==========
+    const areas = [
+        {name:"Dum Dum", lat:22.6246, lon:88.4250},
+        {name:"Nagerbazar", lat:22.6200, lon:88.4100},
+        {name:"Birati", lat:22.6500, lon:88.4200},
+        {name:"Madhyamgram", lat:22.6900, lon:88.4500},
+        {name:"Barasat", lat:22.7200, lon:88.4800},
+        {name:"Duttapukur", lat:22.8000, lon:88.5500},
+        {name:"Bira", lat:22.8300, lon:88.5800},
+        {name:"Ashoknagar", lat:22.8700, lon:88.6200},
+        {name:"Habra", lat:22.8400, lon:88.6300}
+    ];
+
+    function getDistance(lat1, lon1, lat2, lon2) {
+        const R = 6371;
+        const dLat = (lat2 - lat1) * Math.PI / 180;
+        const dLon = (lon2 - lon1) * Math.PI / 180;
+        const a = Math.sin(dLat / 2) ** 2 +
+            Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+            Math.sin(dLon / 2) ** 2;
+        return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    }
+
+    const mapElement = document.getElementById('map');
+    if (mapElement) {
+        const map = L.map('map').setView([22.5726, 88.3639], 12);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+        
+        let marker, circle;
+        const slider = document.getElementById("radiusSlider");
+        const radiusVal = document.getElementById("radiusVal");
+
+        if (slider) {
+            slider.oninput = () => {
+                radiusVal.innerText = slider.value;
+                updateCircle();
+            };
+        }
+
+        function findAreas(lat, lon) {
+            let selected = [];
+            const radiusKm = parseFloat(slider ? slider.value : 10);
+            
+            areas.forEach(area => {
+                let distance = getDistance(lat, lon, area.lat, area.lon);
+                if (distance <= radiusKm) {
+                    selected.push(area.name);
+                }
+            });
+            
+            const serviceAreasInput = document.getElementById("serviceAreas");
+            if (serviceAreasInput) serviceAreasInput.value = selected.join(",");
+            
+            const box = document.getElementById("selectedAreas");
+            if (box) {
+                if (selected.length > 0) {
+                    box.innerHTML = selected.map(a => `<span class="tag"><i class="fa-solid fa-location-dot"></i> ${a}</span>`).join("");
+                } else {
+                    box.innerHTML = '<p style="color: rgba(255,255,255,0.5); font-size: 13px;">No areas found. Try increasing radius.</p>';
+                }
+            }
+        }
+
+        map.on('click', e => {
+            const lat = e.latlng.lat;
+            const lon = e.latlng.lng;
+            
+            if (marker) map.removeLayer(marker);
+            if (circle) map.removeLayer(circle);
+            
+            marker = L.marker([lat, lon]).addTo(map);
+            circle = L.circle([lat, lon], {
+                radius: parseFloat(slider ? slider.value : 10) * 1000,
+                color: '#FFE484',
+                fillColor: '#FFB347',
+                fillOpacity: 0.25,
+                weight: 2
+            }).addTo(map);
+            
+            document.getElementById("centerLat").value = lat;
+            document.getElementById("centerLon").value = lon;
+            document.getElementById("radiusKm").value = slider ? slider.value : 10;
+            findAreas(lat, lon);
+        });
+
+        function updateCircle() {
+            if (marker && circle) {
+                circle.setRadius(parseFloat(slider ? slider.value : 10) * 1000);
+                document.getElementById("radiusKm").value = slider ? slider.value : 10;
+                const pos = marker.getLatLng();
+                findAreas(pos.lat, pos.lng);
+            }
+        }
+
+        // Photo preview
+        const photoInput = document.getElementById('photo');
+        if (photoInput) {
+            photoInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        const img = document.getElementById('preview');
+                        img.src = event.target.result;
+                        img.style.display = 'block';
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+
+        // Auto-locate
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(pos => {
+                map.setView([pos.coords.latitude, pos.coords.longitude], 13);
+            });
+        }
+    }
+</script>
+
+</body>
+</html>

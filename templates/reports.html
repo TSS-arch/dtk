@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>All Reports</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    padding: 20px;
+    background: linear-gradient(135deg, #0b163d, #1a2c73, #2351d6);
+    color: #fff;
+}
+
+/* Main Wrapper */
+.main-wrapper {
+    max-width: 1400px;
+    margin: auto;
+    background: rgba(80, 100, 170, 0.35);
+    backdrop-filter: blur(14px);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 30px;
+    padding: 30px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+}
+
+/* Header */
+.header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.header h2 {
+    font-size: 36px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.header p {
+    color: rgba(255,255,255,0.75);
+    font-size: 15px;
+}
+
+/* Grid */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 24px;
+}
+
+/* Card */
+.card {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 24px;
+    padding: 20px;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.18);
+    transition: 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-6px);
+    background: rgba(255,255,255,0.12);
+    box-shadow: 0 18px 35px rgba(0,0,0,0.25);
+}
+
+/* Badge */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,255,255,0.12);
+    color: #fff;
+    padding: 8px 14px;
+    border-radius: 30px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 18px;
+    letter-spacing: 0.5px;
+}
+
+/* Sections */
+.section {
+    background: rgba(255,255,255,0.05);
+    border-radius: 16px;
+    padding: 14px 16px;
+    margin-bottom: 14px;
+}
+
+.label {
+    font-size: 12px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.7);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.value {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #fff;
+    word-break: break-word;
+}
+
+/* Media Section */
+.media {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 15px;
+}
+
+/* Image */
+.media img {
+    width: 100%;
+    border-radius: 18px;
+    border: 1px solid rgba(255,255,255,0.08);
+    object-fit: cover;
+    max-height: 220px;
+}
+
+/* Map */
+.map-container {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56%;
+    border-radius: 18px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.08);
+}
+
+.map-container iframe {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+/* Solution Box */
+.solution {
+    margin-top: 18px;
+    background: rgba(125, 158, 255, 0.12);
+    border-left: 4px solid #7d9eff;
+    border-radius: 16px;
+    padding: 16px;
+}
+
+.solution-title {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: rgba(255,255,255,0.85);
+}
+
+.solution-text {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #fff;
+}
+
+.no-solution {
+    color: rgba(255,255,255,0.55);
+    font-style: italic;
+}
+
+/* Tablet */
+@media (min-width: 768px) {
+    .media {
+        flex-direction: row;
+    }
+
+    .media img,
+    .map-container {
+        width: 50%;
+    }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    body {
+        padding: 12px;
+    }
+
+    .main-wrapper {
+        padding: 20px;
+        border-radius: 24px;
+    }
+
+    .header h2 {
+        font-size: 28px;
+    }
+
+    .header p {
+        font-size: 14px;
+    }
+
+    .grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .main-wrapper {
+        padding: 18px;
+    }
+
+    .header h2 {
+        font-size: 24px;
+    }
+
+    .card {
+        padding: 16px;
+        border-radius: 20px;
+    }
+
+    .label {
+        font-size: 11px;
+    }
+
+    .value,
+    .solution-text {
+        font-size: 13px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="main-wrapper">
+
+    <div class="header">
+        <h2>Reported Problems</h2>
+        <p>View all submitted public complaints and their current solutions</p>
+    </div>
+
+    <div class="grid">
+
+        {% for r in reports %}
+        <div class="card">
+
+            <div class="badge">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                {{ r[1] }}
+            </div>
+
+            <div class="section">
+                <div class="label">
+                    <i class="fa-solid fa-location-dot"></i> Location
+                </div>
+                <div class="value">{{ r[2] }}</div>
+            </div>
+
+            <div class="section">
+                <div class="label">
+                    <i class="fa-solid fa-pen"></i> Description
+                </div>
+                <div class="value">{{ r[3] }}</div>
+            </div>
+
+            <div class="media">
+
+                {% if r[4] %}
+                <img src="{{ url_for('static', filename='uploads/' + r[4]) }}">
+                {% endif %}
+
+                <div class="map-container">
+                    <iframe
+                        src="https://www.google.com/maps?q={{ r[2] | replace('Lat:', '') | replace('Lon:', '') }}&output=embed">
+                    </iframe>
+                </div>
+
+            </div>
+
+            <div class="solution">
+                <div class="solution-title">
+                    <i class="fa-solid fa-screwdriver-wrench"></i> Solution Status
+                </div>
+
+                <div class="solution-text">
+                    {% if r[5] %}
+                        {{ r[5] }}
+                    {% else %}
+                        <span class="no-solution">No solution yet</span>
+                    {% endif %}
+                </div>
+            </div>
+
+        </div>
+        {% endfor %}
+
+    </div>
+
+</div>
+
+</body>
+</html>

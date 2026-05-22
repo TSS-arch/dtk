@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width,
+               initial-scale=1.0,
+               maximum-scale=1.0,
+               user-scalable=no">
+
+<title>Suggestion Box | Jan Seva</title>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI',sans-serif;
+}
+
+body{
+    min-height:100vh;
+    padding:20px;
+    background:linear-gradient(135deg,#1a2639 0%,#2c3e50 50%,#1e2a38 100%);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+/* MAIN CONTAINER */
+
+.container{
+    width:100%;
+    max-width:700px;
+    background:rgba(15,25,35,0.85);
+    border:1px solid rgba(255,228,132,0.35);
+    border-radius:28px;
+    padding:30px;
+    backdrop-filter:blur(12px);
+    box-shadow:0 20px 50px rgba(0,0,0,0.35);
+    color:#fff;
+}
+
+/* HEADER */
+
+.header{
+    text-align:center;
+    margin-bottom:30px;
+}
+
+.header h1{
+    font-size:32px;
+    color:#FFE484;
+    margin-bottom:10px;
+}
+
+.header p{
+    color:#FFE9C4;
+    font-size:14px;
+}
+
+/* FORM */
+
+.form-group{
+    margin-bottom:20px;
+}
+
+label{
+    display:block;
+    margin-bottom:8px;
+    color:#FFE9C4;
+    font-size:14px;
+    font-weight:600;
+}
+
+label i{
+    margin-right:6px;
+    color:#FFE484;
+}
+
+input,
+textarea,
+select{
+    width:100%;
+    padding:14px 16px;
+    border-radius:16px;
+    border:1px solid rgba(255,228,132,0.2);
+    background:rgba(0,0,0,0.35);
+    color:#fff;
+    font-size:14px;
+    outline:none;
+}
+
+input:focus,
+textarea:focus,
+select:focus{
+    border-color:#FFE484;
+    box-shadow:0 0 10px rgba(255,228,132,0.3);
+}
+
+textarea{
+    min-height:140px;
+    resize:vertical;
+}
+
+input::placeholder,
+textarea::placeholder{
+    color:rgba(255,255,255,0.5);
+}
+
+/* BUTTON */
+
+.submit-btn{
+    width:100%;
+    padding:15px;
+    border:none;
+    border-radius:16px;
+    background:linear-gradient(135deg,#FFB347,#FF8C00);
+    color:#fff;
+    font-size:15px;
+    font-weight:bold;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.submit-btn:hover{
+    transform:translateY(-2px);
+}
+
+.submit-btn i{
+    margin-right:8px;
+    color:#FFE484;
+}
+
+/* STATUS */
+
+#status{
+    margin-top:18px;
+    text-align:center;
+    font-size:14px;
+    color:#FFE9C4;
+}
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+    .container{
+        padding:22px;
+    }
+
+    .header h1{
+        font-size:24px;
+    }
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+
+        <h1>
+            <i class="fa-solid fa-lightbulb"></i>
+            Suggestion Box
+        </h1>
+
+        <p>
+            Share your ideas and suggestions for better public service.
+        </p>
+
+    </div>
+
+    <form id="suggestionForm">
+
+        <!-- NAME -->
+
+        <div class="form-group">
+
+            <label>
+                <i class="fa-solid fa-user"></i>
+                Your Name
+            </label>
+
+            <input type="text"
+                   id="name"
+                   placeholder="Enter your name"
+                   required>
+
+        </div>
+
+        <!-- MOBILE -->
+
+        <div class="form-group">
+
+            <label>
+                <i class="fa-solid fa-phone"></i>
+                Mobile Number
+            </label>
+
+            <input type="tel"
+                   id="mobile"
+                   placeholder="Enter mobile number"
+                   required>
+
+        </div>
+
+        <!-- CATEGORY -->
+
+        <div class="form-group">
+
+            <label>
+                <i class="fa-solid fa-layer-group"></i>
+                Suggestion Category
+            </label>
+
+            <select id="category" required>
+
+                <option value="">
+                    Select Category
+                </option>
+
+                <option>
+                    Infrastructure
+                </option>
+
+                <option>
+                    Cleanliness
+                </option>
+
+                <option>
+                    Safety
+                </option>
+
+                <option>
+                    Education
+                </option>
+
+                <option>
+                    Healthcare
+                </option>
+
+                <option>
+                    Other
+                </option>
+
+            </select>
+
+        </div>
+
+        <!-- SUGGESTION -->
+
+        <div class="form-group">
+
+            <label>
+                <i class="fa-solid fa-comment"></i>
+                Your Suggestion
+            </label>
+
+            <textarea id="suggestion"
+                      placeholder="Write your suggestion here..."
+                      required></textarea>
+
+        </div>
+
+        <!-- SUBMIT -->
+
+        <button type="submit"
+                class="submit-btn">
+
+            <i class="fa-solid fa-paper-plane"></i>
+            Submit Suggestion
+
+        </button>
+
+    </form>
+
+    <div id="status"></div>
+
+</div>
+
+<script>
+
+document.getElementById("suggestionForm")
+.addEventListener("submit", async function(e){
+
+    e.preventDefault();
+
+    const status =
+        document.getElementById("status");
+
+    status.innerText =
+        "Submitting suggestion...";
+
+    const data = {
+
+        name:
+            document.getElementById("name").value,
+
+        mobile:
+            document.getElementById("mobile").value,
+
+        category:
+            document.getElementById("category").value,
+
+        suggestion:
+            document.getElementById("suggestion").value
+    };
+
+    try{
+
+        const response = await fetch("/submit_suggestion",{
+
+            method:"POST",
+
+            headers:{
+                "Content-Type":"application/json"
+            },
+
+            body:JSON.stringify(data)
+        });
+
+        const result =
+            await response.json();
+
+        if(result.success){
+
+            status.innerText =
+                "✓ Suggestion submitted successfully";
+
+            document.getElementById("suggestionForm")
+            .reset();
+
+        }else{
+
+            status.innerText =
+                "⚠ Failed to submit suggestion";
+        }
+
+    }catch(error){
+
+        status.innerText =
+            "⚠ Server error";
+    }
+
+});
+
+</script>
+
+</body>
+
+</html>

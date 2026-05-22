@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Citizen Support | Jan Seva Portal</title>
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            /* Premium gradient with #FFE484 as key accent */
+            background: linear-gradient(135deg, #1a2639 0%, #2c3e50 50%, #1e2a38 100%);
+            min-height: 100vh;
+            color: #fff;
+        }
+
+        .main-wrapper {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 12px;
+            position: relative;
+        }
+
+        /* Subtle tricolor-inspired delicate line (very light political touch) */
+        .main-wrapper::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, #FF9933 0%, #FF9933 33%, #FFFFFF 33%, #FFFFFF 66%, #138808 66%, #138808 100%);
+            opacity: 0.65;
+            z-index: 1;
+        }
+
+        .menu-card {
+            width: 100%;
+            max-width: 950px;
+            background: rgba(15, 25, 35, 0.78);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-radius: 32px;
+            padding: 28px 20px;
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 228, 132, 0.35);
+            transition: all 0.2s ease;
+        }
+
+        .title {
+            font-size: 2.2rem;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+            color: #FFE484;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .title i {
+            font-size: 2rem;
+            color: #FFE484;
+            filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3));
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 0.95rem;
+            font-weight: 500;
+            background: rgba(255, 228, 132, 0.18);
+            display: inline-block;
+            width: auto;
+            margin: 0 auto 25px auto;
+            padding: 6px 20px;
+            border-radius: 60px;
+            backdrop-filter: blur(4px);
+            color: #FFF5E0;
+            border-left: 2px solid #FFE484;
+            border-right: 2px solid #FFE484;
+        }
+
+        .subtitle i {
+            color: #FFE484;
+            margin: 0 4px;
+        }
+
+        /* Elegant buttons with #FFE484 accents */
+        .menu-btn {
+            width: 100%;
+            border: none;
+            border-radius: 24px;
+            padding: 20px 14px;
+            background: linear-gradient(145deg, #2c3e4e, #1f2e3c);
+            color: #fff;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 18px rgba(0, 0, 0, 0.3);
+            min-height: 130px;
+            border-bottom: 2px solid #FFE484;
+            border-right: 1px solid rgba(255, 228, 132, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Glossy shimmer effect */
+        .menu-btn::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 228, 132, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .menu-btn:hover::after {
+            left: 100%;
+        }
+
+        .menu-btn:hover {
+            transform: translateY(-5px);
+            background: linear-gradient(145deg, #364f62, #253e4e);
+            box-shadow: 0 16px 24px rgba(0, 0, 0, 0.35);
+            border-bottom-color: #FFE484;
+            border-bottom-width: 3px;
+        }
+
+        .menu-btn i {
+            font-size: 2.3rem;
+            display: block;
+            margin-bottom: 12px;
+            filter: drop-shadow(0 2px 2px rgba(0,0,0,0.2));
+            color: #FFE484;
+            transition: transform 0.2s;
+        }
+
+        .menu-btn:hover i {
+            transform: scale(1.02);
+            color: #FFEDA3;
+        }
+
+        .menu-btn .btn-title {
+            font-size: 1.08rem;
+            font-weight: 800;
+            display: block;
+            line-height: 1.3;
+            letter-spacing: 0.3px;
+        }
+
+        .menu-btn .btn-desc {
+            font-size: 0.85rem;
+            color: #e0eef7;
+            margin-top: 6px;
+            line-height: 1.4;
+            font-weight: 500;
+        }
+
+        /* Logo button style - replaces scheme awareness */
+        .logo-btn {
+            width: 100%;
+            border: none;
+            border-radius: 24px;
+            padding: 20px 14px;
+            background: linear-gradient(145deg, #2a3a48, #1c2a36);
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 18px rgba(0, 0, 0, 0.3);
+            min-height: 130px;
+            border-bottom: 2px solid #FFE484;
+            border-right: 1px solid rgba(255, 228, 132, 0.3);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .logo-btn:hover {
+            transform: translateY(-5px);
+            background: linear-gradient(145deg, #364f62, #253e4e);
+            box-shadow: 0 16px 24px rgba(0, 0, 0, 0.35);
+            border-bottom-color: #FFE484;
+            border-bottom-width: 3px;
+        }
+
+        .logo-img {
+            max-width: -webkit-fill-available;
+            max-height: fit-content;
+            margin-bottom: 8px;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+            transition: transform 0.2s;
+        }
+
+        .logo-btn:hover .logo-img {
+            transform: scale(1.05);
+        }
+
+        .logo-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #FFE484;
+            margin-top: 6px;
+            letter-spacing: 0.5px;
+        }
+
+        .logo-desc {
+            font-size: 0.75rem;
+            color: #cbd5e6;
+            margin-top: 4px;
+        }
+
+        /* Footer */
+        .footer-text {
+            text-align: center;
+            margin-top: 28px;
+            color: #FFE9C4;
+            font-size: 0.9rem;
+            font-weight: 500;
+            border-top: 1px solid rgba(255, 228, 132, 0.35);
+            padding-top: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .footer-text i {
+            font-size: 1.1rem;
+            color: #FFE484;
+        }
+
+        .flower-accent {
+            color: #FFE484;
+        }
+
+        @media (max-width: 576px) {
+            .title {
+                font-size: 1.7rem;
+            }
+            .title i {
+                font-size: 1.5rem;
+            }
+            .subtitle {
+                font-size: 0.8rem;
+                padding: 4px 14px;
+            }
+            .menu-btn {
+                min-height: 115px;
+                padding: 16px 10px;
+            }
+            .menu-btn i {
+                font-size: 2rem;
+            }
+            .menu-btn .btn-title {
+                font-size: 0.92rem;
+            }
+            .menu-btn .btn-desc {
+                font-size: 0.75rem;
+            }
+            .logo-img {
+                width: 249px;
+
+                max-width: -webkit-fill-available;
+                max-height: fit-content;
+            }
+            .logo-title {
+                font-size: 0.85rem;
+            }
+            .logo-desc {
+                font-size: 0.65rem;
+            }
+        }
+
+        .menu-card hr {
+            border-top: 2px solid #FFE484;
+            opacity: 0.55;
+            width: 80px;
+            margin: 5px auto 12px auto;
+            border-radius: 5px;
+        }
+
+        .subtle-badge {
+            font-size: 0.7rem;
+            background: rgba(255, 228, 132, 0.2);
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 60px;
+            margin-left: 8px;
+            vertical-align: middle;
+            letter-spacing: 0.4px;
+            color: #FFE9B0;
+        }
+
+        .menu-card {
+            animation: fadeSlideUp 0.6s ease-out;
+        }
+
+        @keyframes fadeSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(18px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .menu-btn:active {
+            transform: scale(0.97);
+        }
+    </style>
+</head>
+<body>
+
+<div class="main-wrapper">
+    <div class="menu-card">
+
+
+        <h1 class="title">
+            <i class="bi bi-flower1"></i>
+            আমার দত্তপুকুর
+            <span class="subtle-badge"></span>
+        </h1>
+        <hr>
+        <!--<div class="text-center">-->
+        <!--    <span class="subtitle"><i class="bi bi-brightness-alt-high-fill"></i>    <i class="bi bi-brightness-alt-high-fill"></i></span>-->
+        <!--</div>-->
+
+        <div class="row g-3">
+            <div class="col-6 col-md-4">
+                <button class="menu-btn" onclick="goToPage('complaint')">
+                    <i class="bi bi-chat-square-text-fill"></i>
+                    <span class="btn-title">Complaint Box</span>
+                    <div class="btn-desc">Local complaints & civic issues</div>
+                </button>
+            </div>
+
+            <div class="col-6 col-md-4">
+                <button class="menu-btn" onclick="goToPage('employment_hub')">
+                    <i class="bi bi-briefcase-fill"></i>
+                    <span class="btn-title">Employment</span>
+                    <div class="btn-desc">Jobs, skills & opportunities</div>
+                </button>
+            </div>
+
+            <div class="col-6 col-md-4">
+                <button class="menu-btn" onclick="goToPage('women-help')">
+                    <i class="bi bi-shield-fill-check"></i>
+                    <span class="btn-title">Women Safety</span>
+                    <div class="btn-desc">Quick safety & support resources</div>
+                </button>
+            </div>
+
+            <div class="col-6 col-md-4">
+                <button class="menu-btn" onclick="goToPage('emergency')">
+                    <i class="bi bi-telephone-fill"></i>
+                    <span class="btn-title">Emergency Help</span>
+                    <div class="btn-desc">Emergency support contact</div>
+                </button>
+            </div>
+
+
+            <div class="col-12 col-md-4">
+                 <div class="logo-btn">      <img class="logo-img" src="https://testbyte.pythonanywhere.com/static/WhatsApp_Image_2026-05-08_at_12.55.30_PM-removebg-preview.png">
+
+                </div>
+            </div>
+
+            <div class="col-6 col-md-4">
+                <button class="menu-btn" onclick="goToPage('health')">
+                    <i class="bi bi-heart-pulse-fill"></i>
+                    <span class="btn-title">Health</span>
+                    <div class="btn-desc">Medical help & Emergency services</div>
+                </button>
+            </div>
+
+            <div class="col-6 col-md-4">
+                <button class="menu-btn" onclick="goToPage('education')">
+                    <i class="bi bi-book-fill"></i>
+                    <span class="btn-title">Education</span>
+                    <div class="btn-desc">Free coaching & Computer Training</div>
+                </button>
+            </div>
+
+            <div class="col-6 col-md-4">
+                <button class="menu-btn" onclick="goToPage('profile')">
+                    <i class="bi bi-person-plus-fill"></i>
+                    <span class="btn-title">Register as Volunteer</span>
+                    <div class="btn-desc">Join with us </div>
+                </button>
+            </div>
+
+            <div class="col-6 col-md-4">
+                <button class="menu-btn" onclick="goToPage('suggestion')">
+                    <i class="bi bi-lightbulb-fill"></i>
+                    <span class="btn-title">Suggestion Box</span>
+                    <div class="btn-desc">Share your valuable ideas & feedback</div>
+                </button>
+            </div>
+        </div>
+
+        <div class="footer-text">
+            <i class="bi bi-flower1 flower-accent"></i> Apps Developed By <BR> Coding Hub - Duttapukur<br> Contact: 9051225062 <i class="bi bi-flower1 flower-accent"></i>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    function goToPage(page) {
+        window.location.href = page;
+    }
+</script>
+
+</body>
+</html>

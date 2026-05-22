@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width,
+               initial-scale=1.0,
+               maximum-scale=1.0,
+               user-scalable=no">
+
+<title>Admin Panel</title>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI',sans-serif;
+}
+
+body{
+    min-height:100vh;
+    padding:20px;
+    background:linear-gradient(135deg,#0b163d,#1a2c73,#2351d6);
+    color:#fff;
+}
+
+/* MAIN WRAPPER */
+
+.main-wrapper{
+    max-width:1400px;
+    margin:auto;
+    background:rgba(80,100,170,0.35);
+    backdrop-filter:blur(12px);
+    border:1px solid rgba(255,255,255,0.1);
+    border-radius:30px;
+    padding:25px;
+    box-shadow:0 20px 50px rgba(0,0,0,0.25);
+}
+
+/* HEADER */
+
+.header{
+    text-align:center;
+    margin-bottom:25px;
+}
+
+.header h2{
+    font-size:40px;
+    font-weight:700;
+    margin-bottom:8px;
+}
+
+.header p{
+    font-size:16px;
+    color:rgba(255,255,255,0.8);
+}
+
+/* TABS */
+
+.tabs{
+    display:flex;
+    justify-content:center;
+    gap:15px;
+    flex-wrap:wrap;
+    margin-bottom:30px;
+}
+
+.tab-btn{
+    border:none;
+    background:rgba(255,255,255,0.12);
+    color:#fff;
+    padding:12px 24px;
+    border-radius:40px;
+    cursor:pointer;
+    font-size:14px;
+    font-weight:600;
+    transition:0.3s ease;
+}
+
+.tab-btn.active{
+    background:linear-gradient(135deg,#7d9eff,#5f79d8);
+}
+
+/* SECTIONS */
+
+.section{
+    display:none;
+}
+
+.section.active{
+    display:block;
+}
+
+/* GRID */
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+    gap:22px;
+}
+
+/* CARD */
+
+.card{
+    background:rgba(255,255,255,0.10);
+    border:1px solid rgba(255,255,255,0.08);
+    border-radius:24px;
+    padding:20px;
+    backdrop-filter:blur(12px);
+    box-shadow:0 12px 25px rgba(0,0,0,0.18);
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+}
+
+/* TOP */
+
+.top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.badge{
+    background:rgba(255,255,255,0.15);
+    color:#fff;
+    padding:7px 14px;
+    border-radius:30px;
+    font-size:12px;
+    font-weight:600;
+}
+
+.id{
+    font-size:12px;
+    color:rgba(255,255,255,0.7);
+}
+
+/* IMAGE */
+
+.card img{
+    width:100%;
+    height:180px;
+    object-fit:cover;
+    border-radius:16px;
+}
+
+/* INFO */
+
+.info-block{
+    background:rgba(255,255,255,0.06);
+    border-radius:14px;
+    padding:12px 14px;
+}
+
+.label{
+    font-size:12px;
+    font-weight:600;
+    color:rgba(255,255,255,0.7);
+    margin-bottom:5px;
+}
+
+.text{
+    font-size:14px;
+    color:#fff;
+    line-height:1.5;
+    word-break:break-word;
+}
+
+/* TEXTAREA */
+
+textarea{
+    width:100%;
+    min-height:90px;
+    padding:12px;
+    border-radius:14px;
+    border:none;
+    background:rgba(255,255,255,0.08);
+    color:#fff;
+    resize:vertical;
+}
+
+/* BUTTON */
+
+.btn{
+    width:100%;
+    border:none;
+    padding:12px;
+    border-radius:14px;
+    cursor:pointer;
+    font-size:14px;
+    font-weight:600;
+    color:#fff;
+    background:linear-gradient(135deg,#7d9eff,#5d76d7);
+}
+
+.btn i{
+    margin-right:8px;
+}
+
+/* EMPTY */
+
+.empty{
+    color:rgba(255,255,255,0.55);
+    font-size:12px;
+}
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+    .grid{
+        grid-template-columns:1fr;
+    }
+
+    .tab-btn{
+        width:100%;
+    }
+
+    .header h2{
+        font-size:28px;
+    }
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="main-wrapper">
+
+    <div class="header">
+
+        <h2>
+            Admin Panel
+        </h2>
+
+        <p>
+            Manage users, reports, services and suggestions
+        </p>
+
+    </div>
+
+    <!-- TABS -->
+
+    <div class="tabs">
+
+        <button class="tab-btn active"
+                onclick="showTab(event,'users')">
+
+            <i class="fa-solid fa-user"></i>
+            Users
+
+        </button>
+
+        <button class="tab-btn"
+                onclick="showTab(event,'reports')">
+
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            Reports
+
+        </button>
+
+        <button class="tab-btn"
+                onclick="showTab(event,'services')">
+
+            <i class="fa-solid fa-briefcase"></i>
+            Services
+
+        </button>
+
+        <button class="tab-btn"
+                onclick="showTab(event,'suggestions')">
+
+            <i class="fa-solid fa-lightbulb"></i>
+            Suggestions
+
+        </button>
+
+    </div>
+
+    <!-- USERS -->
+
+    <div id="users"
+         class="section active">
+
+        <div class="grid">
+
+            {% for u in users %}
+
+            <div class="card">
+
+                <div class="top">
+
+                    <div class="badge">
+                        User
+                    </div>
+
+                    <div class="id">
+                        {{ u[0][:8] }}
+                    </div>
+
+                </div>
+
+                {% if u[6] %}
+
+                <img src="{{ url_for('static', filename='uploads/' + u[6]) }}">
+
+                {% endif %}
+
+                <div class="info-block">
+
+                    <div class="label">
+                        Name
+                    </div>
+
+                    <div class="text">
+                        {{ u[1] }}
+                    </div>
+
+                </div>
+
+                <div class="info-block">
+
+                    <div class="label">
+                        Mobile
+                    </div>
+
+                    <div class="text">
+                        {{ u[2] }}
+                    </div>
+
+                </div>
+
+                <div class="info-block">
+
+                    <div class="label">
+                        Address
+                    </div>
+
+                    <div class="text">
+                        {{ u[5] }}
+                    </div>
+
+                </div>
+
+                <a href="/id_card/{{ u[0] }}"
+                   target="_blank">
+
+                    <button class="btn">
+
+                        <i class="fa-solid fa-id-card"></i>
+
+                        View ID Card
+
+                    </button>
+
+                </a>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+    <!-- REPORTS -->
+
+    <div id="reports"
+         class="section">
+
+        <div class="grid">
+
+            {% for r in reports %}
+
+            <div class="card">
+
+                <div class="top">
+
+                    <div class="badge">
+                        {{ r[1] }}
+                    </div>
+
+                    <div class="id">
+                        #{{ r[0] }}
+                    </div>
+
+                </div>
+
+                <div class="info-block">
+
+                    <div class="label">
+                        Location
+                    </div>
+
+                    <div class="text">
+                        {{ r[2] }}
+                    </div>
+
+                </div>
+
+                <div class="info-block">
+
+                    <div class="label">
+                        Description
+                    </div>
+
+                    <div class="text">
+                        {{ r[3] }}
+                    </div>
+
+                </div>
+
+                {% if r[4] %}
+
+                <img src="{{ url_for('static', filename='uploads/' + r[4]) }}">
+
+                {% endif %}
+
+                <form method="POST"
+                      action="/update_solution">
+
+                    <input type="hidden"
+                           name="id"
+                           value="{{ r[0] }}">
+
+                    <div class="label">
+                        Solution
+                    </div>
+
+                    <textarea name="solution"
+                              placeholder="Write solution here...">{{ r[5] }}</textarea>
+
+                    <br><br>
+
+                    <button type="submit"
+                            class="btn">
+
+                        <i class="fa-solid fa-pen-to-square"></i>
+
+                        Update Solution
+
+                    </button>
+
+                </form>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+    <!-- SERVICES -->
+
+    <div id="services"
+         class="section">
+
+        <div class="grid">
+
+            {% for s in services %}
+
+            <div class="card">
+
+                <div class="top">
+
+                    <div class="badge">
+                        {{ s[3] }}
+                    </div>
+
+                    <div class="id">
+                        {{ s[0][:8] }}
+                    </div>
+
+                </div>
+
+                {% if s[5] %}
+
+                <img src="{{ url_for('static', filename='uploads/' + s[5]) }}">
+
+                {% endif %}
+
+                <div class="info-block">
+
+                    <div class="label">
+                        Name
+                    </div>
+
+                    <div class="text">
+                        {{ s[1] }}
+                    </div>
+
+                </div>
+
+                <div class="info-block">
+
+                    <div class="label">
+                        Mobile
+                    </div>
+
+                    <div class="text">
+                        {{ s[2] }}
+                    </div>
+
+                </div>
+
+                <div class="info-block">
+
+                    <div class="label">
+                        Address
+                    </div>
+
+                    <div class="text">
+                        {{ s[4] }}
+                    </div>
+
+                </div>
+
+                <a href="tel:{{ s[2] }}">
+
+                    <button class="btn">
+
+                        <i class="fa-solid fa-phone"></i>
+
+                        Call Provider
+
+                    </button>
+
+                </a>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+    <!-- SUGGESTIONS -->
+
+    <div id="suggestions"
+         class="section">
+
+        <div class="grid">
+
+            {% for sg in suggestions %}
+
+            <div class="card">
+
+                <div class="top">
+
+                    <div class="badge">
+                        {{ sg[3] }}
+                    </div>
+
+                    <div class="id">
+                        #{{ sg[0] }}
+                    </div>
+
+                </div>
+
+                <div class="info-block">
+
+                    <div class="label">
+                        Name
+                    </div>
+
+                    <div class="text">
+                        {{ sg[1] }}
+                    </div>
+
+                </div>
+
+                <div class="info-block">
+
+                    <div class="label">
+                        Mobile
+                    </div>
+
+                    <div class="text">
+                        {{ sg[2] }}
+                    </div>
+
+                </div>
+
+                <div class="info-block">
+
+                    <div class="label">
+                        Suggestion
+                    </div>
+
+                    <div class="text">
+                        {{ sg[4] }}
+                    </div>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+function showTab(event,tabId){
+
+    document.querySelectorAll('.section')
+    .forEach(section => {
+
+        section.classList.remove('active');
+
+    });
+
+    document.querySelectorAll('.tab-btn')
+    .forEach(btn => {
+
+        btn.classList.remove('active');
+
+    });
+
+    document.getElementById(tabId)
+    .classList.add('active');
+
+    event.currentTarget
+    .classList.add('active');
+}
+
+</script>
+
+</body>
+</html>

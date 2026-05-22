@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<title>ID Card</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0b163d, #1a2c73, #2351d6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+/* Wrapper */
+.id-wrapper {
+    width: 100%;
+    max-width: 420px;
+}
+
+/* Card */
+.card {
+    background: rgba(80, 100, 170, 0.35);
+    backdrop-filter: blur(14px);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 30px;
+    overflow: hidden;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+    color: #fff;
+}
+
+/* Header */
+.header {
+    text-align: center;
+    padding: 28px 20px 20px;
+    background: rgba(255,255,255,0.04);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.header h2 {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+.header p {
+    font-size: 13px;
+    color: rgba(255,255,255,0.75);
+}
+
+/* Photo Section */
+.photo-section {
+    display: flex;
+    justify-content: center;
+    margin-top: 25px;
+    margin-bottom: 20px;
+}
+
+.photo-section img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 4px solid rgba(255,255,255,0.25);
+    object-fit: cover;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+}
+
+/* Info Section */
+.info {
+    padding: 0 22px 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.info-block {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 16px;
+    padding: 14px 16px;
+}
+
+.label {
+    font-size: 11px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.7);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+}
+
+.value {
+    font-size: 15px;
+    color: #fff;
+    line-height: 1.5;
+    word-break: break-word;
+}
+
+/* Footer */
+.footer {
+    background: rgba(255,255,255,0.05);
+    border-top: 1px solid rgba(255,255,255,0.08);
+    text-align: center;
+    padding: 18px;
+    font-size: 13px;
+    color: rgba(255,255,255,0.75);
+}
+
+.footer i {
+    margin-right: 6px;
+}
+
+/* Download Button */
+.button-wrapper {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.download-btn {
+    border: none;
+    background: linear-gradient(135deg, #7d9eff, #5f79d8);
+    color: #fff;
+    padding: 14px 22px;
+    border-radius: 16px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    transition: 0.3s ease;
+}
+
+.download-btn:hover {
+    transform: translateY(-2px);
+    background: linear-gradient(135deg, #8cabff, #6c84e5);
+}
+
+.download-btn i {
+    margin-right: 8px;
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+    .card {
+        border-radius: 24px;
+    }
+
+    .header h2 {
+        font-size: 22px;
+    }
+
+    .photo-section img {
+        width: 100px;
+        height: 100px;
+    }
+
+    .value {
+        font-size: 14px;
+    }
+
+    .download-btn {
+        width: 100%;
+    }
+}
+
+/* Print Style */
+@media print {
+    body {
+        background: #fff;
+        padding: 0;
+    }
+
+    .download-btn {
+        display: none;
+    }
+
+    .card {
+        box-shadow: none;
+        border: 1px solid #ccc;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="id-wrapper">
+
+    <div class="card" id="idCard">
+
+        <div class="header">
+            <h2>Civic ID Card</h2>
+            <p>Verified Citizen Identity</p>
+        </div>
+
+        <div class="photo-section">
+            {% if user[5] %}
+                <img src="{{ url_for('static', filename='uploads/' + user[5]) }}">
+            {% else %}
+                <img src="https://via.placeholder.com/120">
+            {% endif %}
+        </div>
+
+        <div class="info">
+
+            <div class="info-block">
+                <div class="label">
+                    <i class="fa-solid fa-user"></i> Full Name
+                </div>
+                <div class="value">{{ user[1] }}</div>
+            </div>
+
+            <div class="info-block">
+                <div class="label">
+                    <i class="fa-solid fa-phone"></i> Mobile Number
+                </div>
+                <div class="value">{{ user[2] }}</div>
+            </div>
+
+            <div class="info-block">
+                <div class="label">
+                    <i class="fa-solid fa-calendar"></i> Date of Birth
+                </div>
+                <div class="value">{{ user[3] }}</div>
+            </div>
+
+            <div class="info-block">
+                <div class="label">
+                    <i class="fa-solid fa-location-dot"></i> Blood Group
+                </div>
+                <div class="value">{{ user[4] }}</div>
+
+            </div> <div class="info-block">
+                <div class="label">
+                    <i class="fa-solid fa-location-dot"></i> Address
+                </div>
+                <div class="value">{{ user[5] }}</div>
+            </div>
+
+
+        </div>
+
+        <div class="footer">
+            <i class="fa-solid fa-circle-check"></i>
+            Verified Citizen • Amar DuttaPukur
+        </div>
+
+    </div>
+
+    <div class="button-wrapper">
+        <button class="download-btn" onclick="downloadPDF()">
+            <i class="fa-solid fa-download"></i> Download PDF
+        </button>
+    </div>
+
+</div>
+
+<script>
+function downloadPDF() {
+    window.print();
+}
+</script>
+
+</body>
+</html>

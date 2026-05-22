@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Service Profile</title>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<style>
+body {
+    font-family: Arial;
+    background: linear-gradient(135deg,#667eea,#764ba2);
+    padding:20px;
+}
+.container {
+    max-width:900px;
+    margin:auto;
+    background:#fff;
+    padding:20px;
+    border-radius:10px;
+}
+.grid {
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:15px;
+}
+.full { grid-column:span 2; }
+
+input {
+    width:100%;
+    padding:10px;
+    border-radius:8px;
+    border:1px solid #ccc;
+}
+
+#map {
+    height:350px;
+    border-radius:10px;
+}
+
+.tag {
+    background:#667eea;
+    color:#fff;
+    padding:5px 10px;
+    margin:3px;
+    border-radius:10px;
+    display:inline-block;
+    font-size:12px;
+}
+
+button {
+    padding:12px;
+    background:#667eea;
+    color:#fff;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+<h2>Create Service Profile</h2>
+
+<form method="POST" action="/service_profile" enctype="multipart/form-data">
+
+<div class="grid">
+
+<input type="text" name="name" placeholder="Name" required>
+<input type="text" name="mobile" placeholder="Mobile" required>
+
+<input type="text" name="occupation" placeholder="Occupation">
+<input type="text" name="address" placeholder="Address">
+
+<div class="full">
+<input type="file" name="photo" id="photo">
+<img id="preview" style="width:100px;margin-top:10px;display:none;">
+</div>
+
+<!-- MAP -->
+<div class="full">
+<label>Select Your Service Coverage</label>
+<div id="map"></div>
+
+<br>
+
+<label>Radius: <span id="radiusVal">10</span> KM</label>
+<input type="range" id="radiusSlider" min="1" max="50" value="10">
+
+<div id="selectedAreas"></div>
+
+</div>
+
+<!-- Hidden -->
+<input type="hidden" name="service_areas" id="serviceAreas">
+<input type="hidden" name="center_lat" id="centerLat">
+<input type="hidden" name="center_lon" id="centerLon">
+<input type="hidden" name="radius_km" id="radiusKm">
+
+</div>
+
+<br>
+<button type="submit">Save Profile</button>
+</form>
+</div>
+
+<script>
+// 🔥 EXTENDED DATASET (can add more anytime)
+const areas = [
+{name:"Dum Dum",lat:22.6246,lon:88.4250},
+{name:"Nagerbazar",lat:22.62,lon:88.41},
+{name:"Birati",lat:22.65,lon:88.42},
+{name:"Madhyamgram",lat:22.69,lon:88.45},
+{name:"Barasat",lat:22.72,lon:88.48},
+{name:"Duttapukur",lat:22.80,lon:88.55},
+{name:"Bira",lat:22.83,lon:88.58},
+{name:"Ashoknagar",lat:22.87,lon:88.62},
+{name:"Habra",lat:22.84,lon:88.63}
+];
+
+// 📏 Distance formula
+function getDistance(lat1, lon1, lat2, lon2){
+    const R = 6371;
+    const dLat = (lat2-lat1)*Math.PI/180;
+    const dLon = (lon2-lon1)*Math.PI/180;
+
+    const a = Math.sin(dLat/2)**2 +
+        Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180) *
+        Math.sin(dLon/2)**2;
+
+    return 2 * R * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+
+// 🗺 MAP
+const map = L.map('map', {
+    scrollWheelZoom: true,
+    dragging: true,
+    touchZoom: true,
+    doubleClickZoom: true,
+    keyboard: false
+}).setView([22.5726,88.3639],12);
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+let marker, circle;
+
+const slider = document.getElementById("radiusSlider");
+const radiusVal = document.getElementById("radiusVal");
+
+slider.oninput = () => {
+    radiusVal.innerText = slider.value;
+    updateCircle();
+};
+
+// 🔍 Find areas
+function findAreas(lat, lon){
+    let selected = [];
+
+    areas.forEach(a=>{
+        let d = getDistance(lat, lon, a.lat, a.lon);
+        if(d <= slider.value){
+            selected.push(a.name);
+        }
+    });
+
+    document.getElementById("serviceAreas").value = selected.join(",");
+
+    const box = document.getElementById("selectedAreas");
+    box.innerHTML = selected.map(a => `<span class="tag">${a}</span>`).join("");
+}
+
+// 📍 Map click
+map.on('click', e => {
+    const lat = e.latlng.lat;
+    const lon = e.latlng.lng;
+
+    if(marker) map.removeLayer(marker);
+    if(circle) map.removeLayer(circle);
+
+    marker = L.marker([lat, lon]).addTo(map);
+
+    circle = L.circle([lat, lon], {
+        radius: slider.value * 1000
+    }).addTo(map);
+
+    document.getElementById("centerLat").value = lat;
+    document.getElementById("centerLon").value = lon;
+    document.getElementById("radiusKm").value = slider.value;
+
+    findAreas(lat, lon);
+});
+
+// 🔄 Update radius
+function updateCircle() {
+    if(marker && circle){
+        circle.setRadius(slider.value * 1000);
+        document.getElementById("radiusKm").value = slider.value;
+
+        const pos = marker.getLatLng();
+        findAreas(pos.lat, pos.lng);
+    }
+}
+
+// 📷 Photo preview
+document.getElementById('photo').onchange = function(){
+    const f = this.files[0];
+    if(f){
+        const r = new FileReader();
+        r.onload = e => {
+            const img = document.getElementById('preview');
+            img.src = e.target.result;
+            img.style.display = 'block';
+        }
+        r.readAsDataURL(f);
+    }
+};
+
+// 📍 Auto locate
+navigator.geolocation.getCurrentPosition(pos=>{
+    map.setView([pos.coords.latitude,pos.coords.longitude],13);
+});
+</script>
+
+</body>
+</html>
