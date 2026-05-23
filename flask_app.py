@@ -173,7 +173,7 @@ APK_FOLDER = os.path.join(app.root_path, 'static')
 def download_apk():
     return send_from_directory(
         APK_FOLDER,
-        'myapp.apk',
+        'amarduttapukur.apk',
         as_attachment=True
     )
 @app.route('/apps')
