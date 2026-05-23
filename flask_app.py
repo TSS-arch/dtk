@@ -1,4 +1,5 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify
+from flask import Flask, render_template, request, redirect, url_for, jsonify, send_from_directory
+
 import sqlite3
 import os
 import uuid
@@ -165,6 +166,16 @@ def submit_suggestion():
 # =========================
 # 🔹 HOME PAGE
 # =========================
+APK_FOLDER = os.path.join(app.root_path, 'static')
+
+# APK download route
+@app.route('/download')
+def download_apk():
+    return send_from_directory(
+        APK_FOLDER,
+        'myapp.apk',
+        as_attachment=True
+    )
 @app.route('/apps')
 def index():
     return render_template('index.html')
